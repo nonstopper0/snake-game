@@ -8,3 +8,11 @@
     margin: .5px;
     background-color: black;
 }
+
+button {
+    width: 100px;
+}
+
+.snake {
+    background-color: red;
+}
