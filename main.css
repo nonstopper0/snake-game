@@ -1,3 +1,7 @@
+.game-container {
+    margin: 0 auto;
+}
+
 .row {
     display: flex;
 }
@@ -5,7 +9,7 @@
 .column {
     width: 20px;
     height: 20px;
-    margin: .5px;
+    margin: 1px;
     background-color: black;
 }
 
@@ -13,6 +17,10 @@ button {
     width: 100px;
 }
 
-.snake {
+.food {
     background-color: red;
+}
+
+.snake {
+    background-color: rgb(187, 187, 187);
 }
