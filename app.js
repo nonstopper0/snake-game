@@ -3,20 +3,20 @@ let boardSize = 20;
 let running = false;
 let outcome = "";
 let runTime = 0;
-let direction = 'right'
-let directionChanged = false;
-let snake = [[2, 1], [0, 0]]
+let direction = 'right';
+let lastDirection = 'right';
+let snake = [[0, 2], [0, 0], [0, 1]];
 // lower the faster
-let speed = 30;
+let speed = 15;
 let score = 0;
 
 document.addEventListener('keydown', keyPressed);
 
 function main() {
-    intialize()
+    intialize();
     setInterval(() => {
         onLoop()
-    },  1000 / 60)
+    }, 1000 / 60)
 }
 
 function add() {
@@ -34,19 +34,27 @@ function onLoop() {
 
 // called from start button
 function start() {
+    speed = 15;
+    score = 0;
+    snake = [[0, 3], [0, 2], [0, 1]];
     running = true;
+    direction = 'right'
+    intialize();
 }
 
 function keyPressed(e) {
-    e.keyCode === 37 && direction != "right" && (direction = "left")
-    e.keyCode === 39 && direction != "left" && (direction = "right")
-    e.keyCode === 38 && direction != "down" && (direction = "up")
-    e.keyCode === 40 && direction != "up" && (direction = "down")
+    e.keyCode === 37 && lastDirection != "right" && (direction = "left")
+    e.keyCode === 39 && lastDirection != "left" && (direction = "right")
+    e.keyCode === 38 && lastDirection != "down" && (direction = "up")
+    e.keyCode === 40 && lastDirection != "up" && (direction = "down")
     console.log(direction);
 }
 
 // fill document with divs
 function intialize() {
+    while (container.firstChild) {
+        container.removeChild(container.firstChild);
+    }
     for (let i = 0; i <= boardSize; i++) {
         let row = document.createElement('div');
         row.classList.add('row');
@@ -92,25 +100,18 @@ function getNewHeadPos() {
         }   
 
         console.log(newHead)
-
-        snake.forEach((snek) => {
-            console.log(snek, newHead)
-            if (snek === newHead) {
-                lose()
-            }
-        })
     
         resolve(newHead)
     })
 }
 
 async function update(user) {
+    lastDirection = direction;
     
-    // remove old snake array
-    for (let i = 0; i < snake.length; i++) {
-        let remove = document.getElementById(`${snake[i][0]} ${snake[i][1]}`)
-        remove.classList.remove('snake');
-    }
+    // remove last snake
+    document.getElementById(`${snake[snake.length - 1][0]} ${snake[snake.length - 1][1]}`).classList.remove('snake');
+
+    
     let head = await getNewHeadPos();
     snake.unshift(head);
     snake.pop();
@@ -124,19 +125,15 @@ async function update(user) {
             foodEaten()
             fill.classList.remove('food');
         }
-        if (fill.classList.contains('snake')) {
-            console.log(fill);
-        }
         fill.classList.add('snake');
     }
 }
 
 function lose() {
     running = false;
-    console.log('you lost');
+    alert('you lost');
 }
 
 
 
 main();
-start();
