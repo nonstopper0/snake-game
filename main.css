@@ -4,6 +4,10 @@
     height: fit-content;
 }
 
+html, body {
+    background-color: rgb(41, 41, 41);
+}
+
 .row {
     display: flex;
 }

@@ -47,7 +47,6 @@ function keyPressed(e) {
     e.keyCode === 39 && lastDirection != "left" && (direction = "right")
     e.keyCode === 38 && lastDirection != "down" && (direction = "up")
     e.keyCode === 40 && lastDirection != "up" && (direction = "down")
-    console.log(direction);
 }
 
 // fill document with divs
@@ -103,8 +102,6 @@ function getNewHeadPos() {
         } else if (direction === "left") {
             newHead[1] = newHead[1] - 1 > -1 ? newHead[1] - 1 : lose()
         }   
-
-        console.log(newHead)
     
         resolve(newHead)
     })
@@ -113,7 +110,7 @@ function getNewHeadPos() {
 async function update(user) {
     lastDirection = direction;
     
-    // remove last snake
+    // remove snake tail
     document.getElementById(`${snake[snake.length - 1][0]} ${snake[snake.length - 1][1]}`).classList.remove('snake');
 
     let head = await getNewHeadPos();
@@ -124,13 +121,17 @@ async function update(user) {
     
     // draw new head
     let fill = document.getElementById(`${snake[0][0]} ${snake[0][1]}`)
+
     if (fill.classList.contains('food')) {
         foodEaten()
         fill.classList.remove('food');
+    } 
+
+    if (fill.classList.contains('snake')) {
+        lose()
     }
+
     fill.classList.add('snake');
-    // for (let i = 0; i < snake.length; i++) {
-    // }
 }
 
 function lose() {
