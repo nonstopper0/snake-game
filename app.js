@@ -5,15 +5,15 @@ let outcome = "";
 let runTime = 0;
 let direction = 'right';
 let lastDirection = 'right';
-let snake = [[0, 2], [0, 0], [0, 1]];
+let snake;
 // lower the faster
-let speed = 15;
-let score = 0;
+let speed;
+let score;
 
 document.addEventListener('keydown', keyPressed);
 
 function main() {
-    intialize();
+    intializeBoard();
     setInterval(() => {
         onLoop()
     }, 1000 / 60)
@@ -32,14 +32,14 @@ function onLoop() {
     } 
 }
 
-// called from start button
+// initialize variables 
 function start() {
     speed = 15;
     score = 0;
-    snake = [[0, 3], [0, 2], [0, 1]];
+    snake = [[0, 1]],
     running = true;
     direction = 'right'
-    intialize();
+    intializeBoard();
 }
 
 function keyPressed(e) {
@@ -51,10 +51,14 @@ function keyPressed(e) {
 }
 
 // fill document with divs
-function intialize() {
+function intializeBoard() {
+
+    // remove previous board
     while (container.firstChild) {
         container.removeChild(container.firstChild);
     }
+
+    // create new board
     for (let i = 0; i <= boardSize; i++) {
         let row = document.createElement('div');
         row.classList.add('row');
@@ -66,18 +70,19 @@ function intialize() {
             row.appendChild(column)
         }
     }
+
     spawnFood();
 }
 
 function spawnFood() {
     let X = (Math.random() * boardSize).toFixed(0);
     let Y = (Math.random() * boardSize).toFixed(0);
-    let food = document.getElementById(`${X} ${Y}`);
-    food.classList.add('food');
+    document.getElementById(`${X} ${Y}`).classList.add('food');
 }
 
 function foodEaten() {
     score += 1;
+    document.getElementById('score').innerText = 'Score: ' + score
     let lSnake = snake[snake.length - 1];
     snake.push(lSnake);
     speed > 5 && (speed -= 1);
@@ -111,22 +116,21 @@ async function update(user) {
     // remove last snake
     document.getElementById(`${snake[snake.length - 1][0]} ${snake[snake.length - 1][1]}`).classList.remove('snake');
 
-    
     let head = await getNewHeadPos();
     snake.unshift(head);
     snake.pop();
     
     
     
-    //draw new snake array
-    for (let i = 0; i < snake.length; i++) {
-        let fill = document.getElementById(`${snake[i][0]} ${snake[i][1]}`)
-        if (fill.classList.contains('food')) {
-            foodEaten()
-            fill.classList.remove('food');
-        }
-        fill.classList.add('snake');
+    // draw new head
+    let fill = document.getElementById(`${snake[0][0]} ${snake[0][1]}`)
+    if (fill.classList.contains('food')) {
+        foodEaten()
+        fill.classList.remove('food');
     }
+    fill.classList.add('snake');
+    // for (let i = 0; i < snake.length; i++) {
+    // }
 }
 
 function lose() {
